@@ -18,6 +18,7 @@ import { filter_products, get_list_products } from '@src/domain/services/custome
 
 // product search component
 export default ProductSearch = (props) => {
+  const { isAdd } = props
   // init state
   const [show, setShow] = useState(false)
   const [isReset, setIsReset] = useState(false)
@@ -44,7 +45,7 @@ export default ProductSearch = (props) => {
     validationSchema: Yup.object({}),
     onSubmit: async (values) => {
       // console.log(">>>Check values:", values)
-      const _object = _.omitBy(values, _.isEmpty);
+      const _object = _.omitBy(values, _.isEmpty)
       // console.log(">>>Check object:", _object)
       const res = await filter_products(_object)
       formik.setSubmitting(!res?.data)
@@ -115,9 +116,11 @@ export default ProductSearch = (props) => {
           </Row>
 
           <div className='mt-3 d-flex justify-content-end'>
-            <Button variant='primary' onClick={() => setShow(true)}>
-              Add Product
-            </Button>
+            {isAdd && 
+              <Button variant='primary' onClick={() => setShow(true)}>
+                Add Product
+              </Button>
+            }
             <ProductAdd show={show} setShow={setShow} />
 
             <Button type='submit' variant='success' className='mx-2'

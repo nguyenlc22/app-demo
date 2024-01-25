@@ -20,8 +20,8 @@ defmodule App.Schema.OrderDetail do
   @doc false
   def changeset(order__detail, attrs) do
     order__detail
-    |> cast(attrs, [:bill_code, :selling_price, :quantity, :product_name])
-    |> validate_required([:bill_code, :selling_price, :quantity, :product_name])
+    |> cast(attrs, [:bill_code, :selling_price, :quantity, :product_name, :order_id, :product_id])
+    |> validate_required([:bill_code, :selling_price, :quantity, :product_name, :order_id, :product_id])
     |> unique_constraint(:bill_code)
   end
 end

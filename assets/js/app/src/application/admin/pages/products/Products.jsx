@@ -5,7 +5,6 @@ import { useEffect } from 'react'
 // import components
 import ProductTable from '@src/application/admin/pages/products/components/ProductTable'
 import ProductSearch from '@src/application/admin/pages/products/components/ProductSearch'
-import ProductAdd from '@src/application/admin/pages/products/components/ProductAdd'
 
 // import redux
 import { useSelector } from '@src/infras/redux'
@@ -25,7 +24,7 @@ const ProductPage = (props) => {
 
   return (
     <React.Fragment>
-      <ProductSearch />
+      <ProductSearch isAdd={true}/>
       <ProductTable />
     </React.Fragment>
   )

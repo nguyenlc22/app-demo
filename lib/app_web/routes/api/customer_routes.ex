@@ -14,4 +14,8 @@ defmodule AppWeb.Api.RouterCustomer do
 
   # orders
   get "/orders", AppWeb.Api.OrderController, :get_all
+  post "/orders", AppWeb.Api.OrderController, :create_order
+  get "/orders/filter", AppWeb.Api.OrderController, :filter
+  get "/orders/:id", AppWeb.Api.OrderController, :get_by_id
+  get "/orders/:id/products", AppWeb.Api.OrderController, :get_products_by_order_id
 end

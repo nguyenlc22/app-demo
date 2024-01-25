@@ -8,6 +8,7 @@ import accountReducer from '@src/infras/redux/reducers/account'
 import customerReducer from '@src/infras/redux/reducers/customer'
 import productReducer from '@src/infras/redux/reducers/customer/products'
 import brandReducer from '@src/infras/redux/reducers/customer/brands'
+import orderReducer from '@src/infras/redux/reducers/customer/orders'
 
 // Initail reducers
 const reducer = combineReducers({
@@ -21,7 +22,8 @@ const reducer = combineReducers({
   ),
   product: productReducer,
   brand: brandReducer,
-  customer: customerReducer
+  customer: customerReducer,
+  order: orderReducer
 })
 
 export default reducer

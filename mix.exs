@@ -56,6 +56,7 @@ defmodule App.MixProject do
       {:calendar, "~> 1.0"},
       {:joken, "~> 2.6"},
       {:poison, "~> 5.0"},
+      {:timex, "~> 3.7"}
     ]
   end
 

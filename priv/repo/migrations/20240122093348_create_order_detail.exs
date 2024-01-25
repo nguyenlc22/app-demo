@@ -13,7 +13,7 @@ defmodule App.Repo.Migrations.CreateOrderDetail do
       timestamps()
     end
 
-    create unique_index(:order_detail, [:bill_code], prefix: :customer)
+    # create unique_index(:order_detail, [:bill_code], prefix: :customer)
     create index(:order_detail, [:product_id], prefix: :customer)
     create index(:order_detail, [:order_id, :product_id], prefix: :customer)
   end

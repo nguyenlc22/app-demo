@@ -3,20 +3,38 @@ import React from 'react'
 import { Card, Table, Nav, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
+import _ from 'lodash'
 
 // import redux
 import { useSelector } from '@src/infras/redux'
+import { dispatch } from '@src/infras/redux'
+import { updateOrderDraft } from '@src/infras/redux/reducers/customer/orders'
+
 import { format_money_vnd } from '@src/common/services/format'
 
 // define product table component
-export default ProductTable = () => {
+export default ProductTable = (props) => {
   // get data from redux
   const { list_products } = useSelector((state) => state?.product)
-
+  const { orders_draft } = useSelector((state) => state?.order)
   // 
   useEffect(() => {
     // console.log(">>>Check data:", list_products?.entries)
   }, [list_products])
+
+  const handleAddProductToOrderDraft = (data) => {
+    // console.log(orders_draft)
+    let draftClone = _.cloneDeep(orders_draft)
+    const dataAdd = {
+      id: data?.id,
+      image: '',
+      name: data?.name,
+      price: data?.selling_price,
+      quantity: 1
+    }
+    draftClone.push(dataAdd)
+    dispatch(updateOrderDraft(draftClone))
+  }
 
   return (
     <Card className='card-one mt-2'>
@@ -71,8 +89,10 @@ export default ProductTable = () => {
               </td>
               <td>
                 <div className="row">
-                  <Button variant="primary" className="btn-icon mx-1"><i className="ri-add-line"></i></Button>
-                  <Button variant="secondary" className="btn-icon"><i className="ri-pencil-fill"></i></Button>
+                  <Button variant="primary" className="btn-icon mx-1"
+                    onClick={() => handleAddProductToOrderDraft(item)}>
+                    <i className="ri-add-line"></i>
+                  </Button>
                 </div>
               </td>
             </tr>

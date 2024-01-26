@@ -4,7 +4,7 @@ defmodule AppWeb.Utils.Functional do
   """
   import Ecto.Changeset
   alias AppWeb.Utils.Token, as: AuthToken
-  alias Joken.Config
+  # alias Joken.Config
 
   @signer Joken.Signer.create("HS256", "secret")
 
@@ -21,7 +21,7 @@ defmodule AppWeb.Utils.Functional do
     Generate token
   """
   def generate_token(extra_claims) do
-    {:ok, token, _claims} = AuthToken.generate_and_sign(extra_claims, @signer)
+    {:ok, _token, _claims} = AuthToken.generate_and_sign(extra_claims, @signer)
   end
 
   def token_options(type) do

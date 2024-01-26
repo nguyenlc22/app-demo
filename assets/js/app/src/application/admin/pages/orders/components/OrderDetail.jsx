@@ -52,7 +52,7 @@ export default OrderDetail = (props) => {
                 id="inputPhoneNumber" 
                 type="text" name='name'
                 className="form-control fw-medium" 
-                defaultValue={orderSelect?.customer_name}
+                defaultValue={orderSelect?.customer?.full_name}
                 onChange={() => {}}
               />
             </div>
@@ -78,7 +78,7 @@ export default OrderDetail = (props) => {
                     id="inputPhoneNumber" 
                     type="text" name='phone'
                     className="form-control fw-medium" 
-                    defaultValue={orderSelect?.customer_phone}
+                    defaultValue={orderSelect?.customer?.phone}
                     onChange={() => {}}
                   />
             </div>
@@ -99,7 +99,7 @@ export default OrderDetail = (props) => {
         {[
           {
             "title": "Products List",
-            "products": orderSelect?.products
+            "products": orderSelect?.order_detail
           }
         ].map((item, index) => (
           <div key={index}>

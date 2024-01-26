@@ -6,7 +6,7 @@ defmodule App.Repo.Order do
 
   alias App.Repo
   alias App.Schema.Order, as: OrderSchema
-  alias App.Schema.Customer, as: CustomerSchema
+  # alias App.Schema.Customer, as: CustomerSchema
   alias App.Schema.OrderDetail, as: OrderDetailSchema
   # alias AppWeb.Utils.Functional, as: UtilsFunc
 
@@ -14,20 +14,7 @@ defmodule App.Repo.Order do
 
   @query from(
     i in OrderSchema,
-    join: c in CustomerSchema,
-    on: c.id == i.customer_id,
-    order_by: [desc: i.id],
-    select: %{
-      "id" => i.id,
-      "address" => i.address,
-      "code" => i.code,
-      "customer_id" => i.customer_id,
-      "customer_name" => c.full_name,
-      "customer_phone" => c.phone,
-      "total_price" => i.total_price,
-      "inserted_at" => i.inserted_at,
-      "updated_at" => i.updated_at
-    }
+    preload: [:customer, :order_detail]
   )
 
   @doc """
@@ -154,34 +141,10 @@ defmodule App.Repo.Order do
   """
   def get_by_id(id) do
     from(
-      i in OrderSchema,
-      where: i.id == ^id,
-      join: c in CustomerSchema,
-      on: c.id == i.customer_id,
-      join: d in OrderDetailSchema,
-      on: i.id == d.order_id,
-      order_by: [desc: i.id],
-      select: %{
-        "id" => i.id,
-        "address" => i.address,
-        "code" => i.code,
-        "customer_id" => i.customer_id,
-        "customer_name" => c.full_name,
-        "customer_phone" => c.phone,
-        "total_price" => i.total_price,
-        "inserted_at" => i.inserted_at,
-        "updated_at" => i.updated_at,
-        "product" => %{
-          "id" => d.id,
-          "order_id" => d.order_id,
-          "product_id" => d.product_id,
-          "bill_code" => d.bill_code,
-          "product_name" => d.product_name,
-          "quantity" => d.quantity,
-          "selling_price" => d.selling_price
-        }
-      }
+      i in @query,
+      preload: [:customer, :order_detail],
+      where: i.id == ^id
     )
-    |> Repo.all()
+    |> Repo.one()
   end
 end

@@ -2,7 +2,7 @@ defmodule AppWeb.Utils.Paginator do
   @moduledoc """
     Utils.Paginator
   """
-  import Ecto.Query, only: [from: 2]
+  # import Ecto.Query, only: [from: 2]
 
   @default_values %{page: 1, size: 20}
   def default_values, do: @default_values

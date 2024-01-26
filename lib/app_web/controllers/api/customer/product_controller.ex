@@ -5,8 +5,8 @@ defmodule AppWeb.Api.ProductController do
   use AppWeb, :controller
 
   alias App.Repo.Product, as: ProductRepo
-  alias App.Schema.Product, as: ProductSchema
-  alias AppWeb.Utils.Functional, as: UtilsFunc
+  # alias App.Schema.Product, as: ProductSchema
+  # alias AppWeb.Utils.Functional, as: UtilsFunc
 
   @doc """
     - GET ALL PRODUCTS
@@ -17,56 +17,74 @@ defmodule AppWeb.Api.ProductController do
         2.3. Return data
   """
   def get_all(conn, params) do
-    res = ProductRepo.get_all(params)
-    json(conn, %{
-      status: "Success",
-      data: %{ EC: 200, EM: "", DT: res }
-    })
+    with {:ok, res} <- {:ok, ProductRepo.get_all(params)} do
+      json(conn, %{
+        status: "Success",
+        data: %{EC: 200, EM: "", DT: res}
+      })
+    else
+      _ ->
+        json(conn, %{
+          status: "Error",
+          data: %{EC: 400, EM: "Internal server error!", DT: %{}}
+        })
+    end
   end
 
   @doc """
     - CREATE NEW PRODUCT
   """
   def create_product(conn, params) do
-    with params_at <- params
-      |> Map.put("inserted_at", Calendar.DateTime.now!("Asia/Ho_Chi_Minh"))
-      |> Map.put("updated_at", Calendar.DateTime.now!("Asia/Ho_Chi_Minh")),
-      product_fetch <- ProductRepo.get_product_with_code(params_at) do
-        cond do
-          is_nil(product_fetch) ->
-            case ProductRepo.create_product(params_at) do
-              {:ok, product} ->
-                json(conn, %{
-                  status: "Success",
-                  data: %{ EC: 200, EM: "Add product success", DT: Map.put(params_at, :id, product.id)}
-                })
-              {:error, %Ecto.Changeset{} = changeset} ->
-                IO.inspect(changeset)
-                json(conn, %{
-                  status: "Error",
-                  data: %{ EC: 400, EM: "Something wrong from fields!", DT: %{}}
-                })
-              _ -> json(conn, %{
-                status: "Error",
-                data: %{ EC: 500, EM: "Internal server error!", DT: %{}}
-              })
-            end
-          true -> json(conn, %{
-            status: "Error",
-            data: %{ EC: 400, EM: "Product code is already!", DT: %{}}
-          })
-        end
-      end
+    with params_at <-
+           params
+           |> AppWeb.Utils.Datetime.format_time_insert_db(),
+         {:product_fetch, product_fetch} when not is_nil(product_fetch) <-
+           {:product_fetch, is_nil(ProductRepo.get_product_with_code(params_at))},
+         {:ok, product} <- ProductRepo.create_product(params_at) do
+      json(conn, %{
+        status: "Success",
+        data: %{
+          EC: 200,
+          EM: "Add product success",
+          DT: Map.put(params_at, :id, product.id)
+        }
+      })
+    else
+      {:product_fetch, true} ->
+        json(conn, %{
+          status: "Error",
+          data: %{EC: 400, EM: "Product code is already!", DT: %{}}
+        })
+
+      {:error, %Ecto.Changeset{} = _changeset} ->
+        json(conn, %{
+          status: "Error",
+          data: %{EC: 400, EM: "Something wrong from fields!", DT: %{}}
+        })
+
+      {:error, _message} ->
+        json(conn, %{
+          status: "Error",
+          data: %{EC: 400, EM: "Internal server error!", DT: %{}}
+        })
+    end
   end
 
   @doc """
     - FILTER PRODUCTS WITH PARAMS
   """
   def filter(conn, params) do
-    res = ProductRepo.filter(params)
-    json(conn, %{
-      status: "Success",
-      data: %{ EC: 200, EM: "Filter product success", DT: res}
-    })
+    with {:ok, res} <- {:ok, ProductRepo.filter(params)} do
+      json(conn, %{
+        status: "Success",
+        data: %{EC: 200, EM: "Filter product success", DT: res}
+      })
+    else
+      _ ->
+        json(conn, %{
+          status: "Error",
+          data: %{EC: 400, EM: "Internal server error!", DT: %{}}
+        })
+    end
   end
 end

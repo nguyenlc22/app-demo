@@ -3,7 +3,7 @@ defmodule AppWeb.Utils.Token do
     The functional utils token
   """
   use Joken.Config
-  alias Joken.Claim
+  # alias Joken.Claim
 
   @impl true
   def token_config do

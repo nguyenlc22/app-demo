@@ -2,7 +2,8 @@ defmodule App.Schema.Order do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, except: [:__meta__, :customer, :order_detail]}
+  # @derive {Jason.Encoder, except: [:__meta__, :customer, :order_detail]}
+  @derive {Jason.Encoder, except: [:__meta__,]}
 
   @schema_prefix :customer
   schema "orders" do

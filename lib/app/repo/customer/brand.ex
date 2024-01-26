@@ -6,7 +6,7 @@ defmodule App.Repo.Brand do
 
   alias App.Repo
   alias App.Schema.Brand, as: BrandSchema
-  alias AppWeb.Utils.Functional, as: UtilsFunc
+  # alias AppWeb.Utils.Functional, as: UtilsFunc
 
   @doc """
     Get all products from db

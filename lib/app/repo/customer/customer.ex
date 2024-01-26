@@ -6,8 +6,7 @@ defmodule App.Repo.Customer do
 
   alias App.Repo
   alias App.Schema.Customer, as: CustomerSchema
-  alias App.Schema.Customer, as: CustomerSchema
-  alias AppWeb.Utils.Functional, as: UtilsFunc
+  # alias AppWeb.Utils.Functional, as: UtilsFunc
 
   @query from(
     i in CustomerSchema
@@ -45,7 +44,7 @@ defmodule App.Repo.Customer do
     with {:ok, %AppWeb.Utils.Paginator{} = data} <- AppWeb.Utils.Paginator.new(params) do
       # define schema
       total_entries = Repo.aggregate(@query, :count, :id)
-      offset = data.size * (data.page - 1)
+      _offset = data.size * (data.page - 1)
       # add offset and limit for query schema
       entries = Enum.reduce(params, @query, fn {key, val}, queryable ->
         key_atom = String.to_existing_atom(key)

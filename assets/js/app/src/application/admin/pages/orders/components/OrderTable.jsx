@@ -49,12 +49,12 @@ export default OrderTable = (props) => {
               <td>
                 <div className='d-flex align-items-center gap-2'>
                   <div>
-                    <h6 className='mb-0'>{item?.customer_name}</h6>
+                    <h6 className='mb-0'>{item?.customer?.full_name}</h6>
                   </div>
                 </div>
               </td>
               <td>
-                <span className='ff-numerals'>{item?.customer_phone}</span>
+                <span className='ff-numerals'>{item?.customer?.phone}</span>
               </td>
               <td width={10}>
                 <span className='fw-medium text-dark ff-numerals'>{item?.code}</span>

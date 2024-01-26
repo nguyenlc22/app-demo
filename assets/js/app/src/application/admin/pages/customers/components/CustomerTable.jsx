@@ -1,7 +1,6 @@
 // import libs
 import React from 'react'
 import { Card, Table, Nav, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
 
 // import redux
@@ -61,10 +60,10 @@ export default CustomerTable = () => {
                 <span className='fw-medium text-dark ff-numerals'>{item?.birth}</span>
               </td>
               <td>
-                <div className="row">
+                {/* <div className="row">
                   <Button variant="primary" className="btn-icon mx-1"><i className="ri-menu-line"></i></Button>
                   <Button variant="secondary" className="btn-icon"><i className="ri-pencil-fill"></i></Button>
-                </div>
+                </div> */}
               </td>
             </tr>
           ))}

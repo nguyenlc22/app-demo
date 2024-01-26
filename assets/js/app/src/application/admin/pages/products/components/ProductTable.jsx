@@ -1,7 +1,6 @@
 // import libs
 import React from 'react'
-import { Card, Table, Nav, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Card, Table, Button } from 'react-bootstrap'
 import { useEffect } from 'react'
 import _ from 'lodash'
 

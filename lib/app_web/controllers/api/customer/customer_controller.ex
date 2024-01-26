@@ -18,4 +18,15 @@ defmodule AppWeb.Api.CustomerController do
       data: %{ EC: 200, EM: "", DT: res }
     })
   end
+
+  @doc """
+    - FILTER CUSTOMER WITH PARTIAL STRING
+  """
+  def filter_partial_string(conn, params) do
+    res = CustomerRepo.filter_partial_string(params)
+    json(conn, %{
+      status: "Success",
+      data: %{ EC: 200, EM: "Filter customer success", DT: res}
+    })
+  end
 end

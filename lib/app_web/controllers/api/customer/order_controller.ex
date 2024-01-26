@@ -38,7 +38,7 @@ defmodule AppWeb.Api.OrderController do
     else
       {:proc_order_detail, _error} -> json(conn, %{
         status: "Error",
-        data: %{ EC: 400, EM: "Somethin wrong from data!", DT: %{}}
+        data: %{ EC: 400, EM: "Something wrong from data!", DT: %{}}
       })
       _ -> json(conn, %{
         status: "Error",

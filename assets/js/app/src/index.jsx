@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify'
 // import css toast
 import '../node_modules/react-toastify/dist/ReactToastify.css'
 import "../node_modules/react-datepicker/dist/react-datepicker.css";
+import '../node_modules/react-bootstrap-typeahead/css/Typeahead.css'
 
 // import projects
 import App from '@src/App'

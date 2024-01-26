@@ -37,4 +37,29 @@ defmodule App.Repo.Customer do
       }
     end
   end
+
+  @doc """
+    Filter customer with partial string in customer's name
+  """
+  def filter_partial_string(params) do
+    with {:ok, %AppWeb.Utils.Paginator{} = data} <- AppWeb.Utils.Paginator.new(params) do
+      # define schema
+      total_entries = Repo.aggregate(@query, :count, :id)
+      offset = data.size * (data.page - 1)
+      # add offset and limit for query schema
+      entries = Enum.reduce(params, @query, fn {key, val}, queryable ->
+        key_atom = String.to_existing_atom(key)
+        # where(queryable, ^dynamic([m], field(m, ^key_atom) == ^val))
+        where(queryable, ^dynamic([m], ilike(field(m, ^key_atom), ^"%#{val}%")))
+      end) |> Repo.all()
+      # return schema
+      %{
+        entries: entries,
+        page: data.page,
+        size: data.size,
+        total_entries: total_entries,
+        total_pages: Float.ceil(total_entries / data.size) |> round()
+      }
+    end
+  end
 end

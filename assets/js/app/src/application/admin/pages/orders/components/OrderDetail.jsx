@@ -6,6 +6,8 @@ import { Button, Card, Row, Col, Nav, ListGroup, Table, Modal } from "react-boot
 
 // import redux
 import { useSelector } from '@src/infras/redux'
+import { dispatch } from '@src/infras/redux'
+import { selectOrder } from '@src/infras/redux/reducers/customer/orders'
 
 import { format_money_vnd } from '@src/common/services/format'
 
@@ -16,51 +18,91 @@ export default OrderDetail = (props) => {
   // get data from redux
   const { orderSelect } = useSelector((state) => state.order)
 
+  useEffect(() => {}, [orderSelect])
+
   return (
-    <Modal size='lg' show={show} onHide={() => setShow(false)} backdrop='static' keyboard={false}>
+    <Modal size='lg' show={show} onHide={() => {
+      setShow(false)
+      dispatch(selectOrder({}))
+    }} backdrop='static' keyboard={false}>
       <Modal.Header closeButton>
         <Modal.Title>Order Detail</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <div className="divider divider-start fw-medium">
+          <span>Information Custoner</span>
+        </div>
         <Col xl>
           <div className="d-flex justify-content-center">
-            <p className="d-sm-flex align-items-center mb-2 mx-2">
-              <span className="fs-sm">Code: <strong>{orderSelect?.code}</strong></span>
-            </p>
-
-            <p className="d-sm-flex align-items-center mb-2 mx-4">
-              <span className="fs-sm">Name: <strong>{orderSelect?.customer_name}</strong></span>
-            </p>
-
-            <p className="d-sm-flex align-items-center mb-2 mx-4">
-              <span className="fs-sm">Phone: <strong>{orderSelect?.customer_phone}</strong></span>
-            </p>
-
-            <p className="d-sm-flex align-items-center mb-2 mx-2">
-              <span className="fs-sm">Address: <strong>{orderSelect?.address}</strong></span>
-            </p>
-
-            {/* <div className='d-flex mx-2'>
-              <h6 className="fs-sm text-secondary mb-0">Customer Name</h6>
-              <h6 className="fw-semibold text-dark mb-1">{orderSelect?.customer_name}</h6>
+            <div className="input-group mx-1">
+              <span className="input-group-text">Code</span>
+              <input
+                disabled
+                id="inputPhoneNumber" 
+                type="text" name='code'
+                className="form-control fw-medium" 
+                defaultValue={orderSelect?.code}
+                onChange={() => {}}
+              />
             </div>
-            <div className='mx-4'>
-              <h6 className="fs-sm text-secondary mb-0">Phone</h6>
-              <p className="fw-semibold text-dark mb-1">{orderSelect?.customer_phone}</p>
+            <div className="input-group mx-1">
+              <span className="input-group-text">Name</span>
+              <input
+                disabled
+                id="inputPhoneNumber" 
+                type="text" name='name'
+                className="form-control fw-medium" 
+                defaultValue={orderSelect?.customer_name}
+                onChange={() => {}}
+              />
             </div>
-            <div className='mx-2'>
-              <h6 className="fs-sm text-secondary mb-0">Address</h6>
-              <p className="fw-semibold text-dark mb-1">{orderSelect?.address}</p>
-            </div> */}
+            <div className="input-group mx-1">
+              <span className="input-group-text">Total Price</span>
+              <input
+                disabled
+                id="inputPhoneNumber" 
+                type="text" name='total_price'
+                className="form-control fw-medium" 
+                defaultValue={orderSelect?.total_price}
+                onChange={() => {}}
+              />
+            </div>
           </div>
         </Col>
+        <Col className='mt-2'>
+          <div className="d-flex justify-content-center">
+            <div className="input-group mx-1">
+                  <span className="input-group-text">Phone</span>
+                  <input
+                    disabled
+                    id="inputPhoneNumber" 
+                    type="text" name='phone'
+                    className="form-control fw-medium" 
+                    defaultValue={orderSelect?.customer_phone}
+                    onChange={() => {}}
+                  />
+            </div>
+            <div className="input-group mx-1">
+              <span className="input-group-text">Address</span>
+              <input
+                disabled
+                id="inputPhoneNumber" 
+                type="text" name='address'
+                className="form-control fw-medium" 
+                defaultValue={orderSelect?.address}
+                onChange={() => {}}
+              />
+            </div>
+          </div>
+        </Col>
+      
         {[
           {
             "title": "Products List",
             "products": orderSelect?.products
           }
         ].map((item, index) => (
-          <React.Fragment key={index}>
+          <div key={index}>
             <div className={"divider divider-start fw-medium" + ((index === 0) ? "mt-2" : "")}>
               <span>{item.title}</span>
             </div>
@@ -86,7 +128,7 @@ export default OrderDetail = (props) => {
                 </ListGroup.Item>
               ))}
             </ListGroup>
-          </React.Fragment>
+          </div>
         ))}
       </Modal.Body>
     </Modal>

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Card, Row, Col, Form, Button, Spinner } from 'react-bootstrap'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 // import redux
 import { useSelector } from '@src/infras/redux'

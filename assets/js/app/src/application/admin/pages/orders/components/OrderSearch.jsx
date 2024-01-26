@@ -1,7 +1,7 @@
 // import libs
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { Card, Row, Col, Form, Button, Spinner, Container } from 'react-bootstrap'
+import { Card, Row, Col, Form, Button, Spinner } from 'react-bootstrap'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import _ from 'lodash'
@@ -10,7 +10,7 @@ import moment from 'moment'
 
 // import redux
 import { useSelector } from '@src/infras/redux'
-import OrderAdd from './OrderAdd'
+import OrderAdd from '@src/application/admin/pages/orders/components/OrderAdd'
 
 // import components
 
@@ -44,13 +44,20 @@ export default OrderSearch = (props) => {
   // init state formik
   const [formState, setFormState] = useState(true)
 
+  // const SEARCH_URI = 'https://api.github.com/search/users';
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [options, setOptions] = useState([]);
 
-  const convertDateToTimeStamp = (value) => {
-    const date = new Date(value);
-    // ✅ If you need to convert to Seconds
-    const timestampSeconds = Math.floor(date.getTime() / 1000);
-    return new Date(timestampSeconds * 1000).toISOString().slice(0, 19)
-  }
+  // const handleSearch = (query) => {
+  //   setIsLoading(true);
+
+  //   fetch(`${SEARCH_URI}?q=${query}+in:login&page=1&per_page=50`)
+  //     .then((resp) => resp.json())
+  //     .then(({ items }) => {
+  //       setOptions(items);
+  //       setIsLoading(false);
+  //     });
+  // };
 
   // handle filter products
   const formik = useFormik({
@@ -73,7 +80,8 @@ export default OrderSearch = (props) => {
             endDate.toISOString().replace('T', ' ')
           ]
         }
-    
+      
+      // processing data for search price range
       if (checkedPrice) {
         let slider = $("#range").data("ionRangeSlider");
         valuesClone = {
@@ -81,7 +89,7 @@ export default OrderSearch = (props) => {
           total_price: [slider?.result?.from, slider?.result?.to]
         }
       }
-      console.log(valuesClone)
+  
       const _object = _.omitBy(valuesClone, _.isEmpty)
       // check if search with date time
 
@@ -96,6 +104,7 @@ export default OrderSearch = (props) => {
     }
   })
 
+  const filterBy = () => true;
   return (
     <Card className='card-one'>
       <Card.Header>
@@ -117,12 +126,43 @@ export default OrderSearch = (props) => {
             <Col>
               <Form.Group controlId='full_name'>
                 <Form.Label>Customer Name</Form.Label>
+                {/* <AsyncTypeahead
+                  filterBy={filterBy}
+                  id="async-example"
+                  isLoading={isLoading}
+                  labelKey="login"
+                  minLength={1}
+                  onSearch={handleSearch}
+                  options={options}
+                  placeholder="Search for a customer's name"
+                  onChange={setOptions}
+                  value={formik.values.full_name}
+                  renderMenuItemChildren={(option) => (
+                    <>
+                      <span>{option.login}</span>
+                    </>
+                  )}
+                /> */}
                 <Form.Control
                   type='text'
                   name='full_name'
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.full_name}
+                  placeholder="Cusotmer's name"
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId='code'>
+                <Form.Label>Code</Form.Label>
+                <Form.Control
+                  type='text'
+                  name='code'
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.code}
+                  placeholder="Code's order"
                 />
               </Form.Group>
             </Col>
@@ -135,19 +175,7 @@ export default OrderSearch = (props) => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.phone}
-                />
-              </Form.Group>
-            </Col>
-      
-            <Col>
-              <Form.Group controlId='code'>
-                <Form.Label>Code</Form.Label>
-                <Form.Control
-                  type='text'
-                  name='code'
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.code}
+                  placeholder="Phone's customer"
                 />
               </Form.Group>
             </Col>

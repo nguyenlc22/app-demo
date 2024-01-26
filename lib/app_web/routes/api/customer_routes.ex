@@ -3,6 +3,7 @@ defmodule AppWeb.Api.RouterCustomer do
 
   # customers
   get "/", AppWeb.Api.CustomerController, :get_all
+  get "/filter-partial", AppWeb.Api.CustomerController, :filter_partial_string
 
   # products
   get "/products", AppWeb.Api.ProductController, :get_all

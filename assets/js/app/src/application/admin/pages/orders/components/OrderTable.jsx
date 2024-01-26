@@ -1,7 +1,6 @@
 // import libs
 import React, { useState } from 'react'
-import { Card, Table, Nav, Button, Collapse } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Card, Table, Nav, Button } from 'react-bootstrap'
 import { useEffect } from 'react'
 import _ from 'lodash'
 
@@ -23,7 +22,7 @@ export default OrderTable = (props) => {
   const { list_orders } = useSelector((state) => state?.order)
   // 
   useEffect(() => {
-    console.log(">>>Check data:", list_orders?.entries)
+    // console.log(">>>Check data:", list_orders?.entries)
   }, [list_orders])
 
   return (
@@ -82,10 +81,10 @@ export default OrderTable = (props) => {
                     show={show}
                     setShow={setShow}
                   />
-                  <Button variant="secondary" className="btn-icon mx-1"
+                  {/* <Button variant="secondary" className="btn-icon mx-1"
                     onClick={() => {}}>
                     <i className="ri-export-line"></i>
-                  </Button>
+                  </Button> */}
                 </div>
               </td>
             </tr>

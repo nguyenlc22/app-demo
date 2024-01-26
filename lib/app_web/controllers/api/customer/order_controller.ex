@@ -26,45 +26,12 @@ defmodule AppWeb.Api.OrderController do
       3. Insert order detail to database with id order is geted
   """
   def create_order(conn, params) do
-    with %{ "data_order" => data_order, "data_order_detail" => data_order_detail } <- params,
-      {:ok, data_order_proc} <- proc_data_order(data_order),
-      {:ok, %{id: order_id} = _order} <- OrderRepo.create_order(data_order_proc),
-      {:ok, order_detail_proc} <- UtilsFunc.op(:proc_order_detail, proc_data_order_detail(data_order_detail, order_id)),
-      {:ok, _order_response} <- OrderRepo.create_order_detail(order_detail_proc) do
-        json(conn, %{
-          status: "Success",
-          data: %{ EC: 200, EM: "Create order success", DT: %{} }
-        })
-    else
-      {:proc_order_detail, _error} -> json(conn, %{
-        status: "Error",
-        data: %{ EC: 400, EM: "Something wrong from data!", DT: %{}}
-      })
-      _ -> json(conn, %{
-        status: "Error",
-        data: %{ EC: 500, EM: "Internal server error!", DT: %{}}
+    with {:ok, data} <- OrderRepo.create_order(params) do
+      json(conn, %{
+        status: "Success",
+        data: %{ EC: 200, EM: "Create order success", DT: %{} }
       })
     end
-  end
-
-  def proc_data_order(data) do
-    data_proc = data
-      |> Map.put("inserted_at", Calendar.DateTime.now!("Asia/Ho_Chi_Minh"))
-      |> Map.put("updated_at", Calendar.DateTime.now!("Asia/Ho_Chi_Minh"))
-    {:ok, data_proc}
-  end
-
-  def proc_data_order_detail(data, order_id) do
-    order_proc = Enum.reduce(data, [], fn item, order_detail ->
-      data = item
-        |> Map.put("order_id", order_id)
-        |> Map.put("inserted_at", Calendar.DateTime.now!("Asia/Ho_Chi_Minh"))
-        |> Map.put("updated_at", Calendar.DateTime.now!("Asia/Ho_Chi_Minh"))
-
-      order_detail ++ [data]
-    end)
-
-    {:ok, order_proc}
   end
 
   @doc """
@@ -101,12 +68,12 @@ defmodule AppWeb.Api.OrderController do
   def get_products_by_order_id(conn, params) do
     with %{"id" => id} <- params,
       res <- OrderRepo.get_by_id(id) do
-        products_pro = Enum.reduce(res, [], fn ele, result ->
+        products_proc = Enum.reduce(res, [], fn ele, result ->
           result ++ [Map.get(ele, "product")]
         end)
         json(conn, %{
           status: "Success",
-          data: %{ EC: 200, EM: "Get products with order id success", DT: %{"products" => products_pro}}
+          data: %{ EC: 200, EM: "Get products with order id success", DT: %{"products" => products_proc}}
         })
     end
   end

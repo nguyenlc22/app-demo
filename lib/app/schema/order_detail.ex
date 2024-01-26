@@ -17,11 +17,12 @@ defmodule App.Schema.OrderDetail do
     timestamps()
   end
 
+  @default_fields [:bill_code, :selling_price, :quantity, :product_name, :order_id, :product_id]
   @doc false
-  def changeset(order__detail, attrs) do
-    order__detail
-    |> cast(attrs, [:bill_code, :selling_price, :quantity, :product_name, :order_id, :product_id])
-    |> validate_required([:bill_code, :selling_price, :quantity, :product_name, :order_id, :product_id])
+  def changeset(order_detail, attrs) do
+    order_detail
+    |> cast(attrs, @default_fields)
+    |> validate_required(@default_fields)
     |> unique_constraint(:bill_code)
   end
 end

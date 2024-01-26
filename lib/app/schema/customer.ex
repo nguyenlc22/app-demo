@@ -15,10 +15,11 @@ defmodule App.Schema.Customer do
     timestamps()
   end
 
+  @default_fields [:full_name, :address, :phone, :birth]
   @doc false
   def changeset(customer, attrs) do
     customer
-    |> cast(attrs, [:full_name, :address, :phone, :birth])
-    |> validate_required([:full_name, :address, :phone, :birth])
+    |> cast(attrs, @default_fields)
+    |> validate_required(@default_fields)
   end
 end

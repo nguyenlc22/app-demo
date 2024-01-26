@@ -8,8 +8,7 @@ defmodule App.Repo.Order do
   alias App.Schema.Order, as: OrderSchema
   alias App.Schema.Customer, as: CustomerSchema
   alias App.Schema.OrderDetail, as: OrderDetailSchema
-  alias App.Schema.OrderDetail, as: OrderDetailSchema
-  alias AppWeb.Utils.Functional, as: UtilsFunc
+  # alias AppWeb.Utils.Functional, as: UtilsFunc
 
   @filter_association ["full_name", "phone"]
 
@@ -60,16 +59,41 @@ defmodule App.Repo.Order do
     Insert order
   """
   def create_order(params) do
-    %OrderSchema{}
-    |> OrderSchema.changeset(params)
-    |> Repo.insert()
+    with %{ "data_order" => data_order, "data_order_detail" => data_order_detail } <- params do
+      # processing date order
+      data_order_proc = AppWeb.Utils.Datetime.format_time_insert_db(data_order)
+      data_order_changeset = %OrderSchema{} |> OrderSchema.changeset(data_order_proc)
+
+      ##########
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:order, data_order_changeset)
+      |> Ecto.Multi.run(:order_detail, fn _repo, %{order: order} ->
+        # processing date order detail
+        data_order_detail_proc = Enum.reduce(data_order_detail, [], fn item, order_detail ->
+          data = item
+            |> Map.put("order_id", order.id)
+            |> AppWeb.Utils.Datetime.format_time_insert_db()
+
+          order_detail ++ [data]
+        end)
+        IO.inspect(data_order_detail_proc)
+        # {:ok, _order_detail} = Repo.insert_all(OrderDetailSchema, data_order_detail_proc)
+        {:ok, _order_detail} = create_order_detail(data_order_detail_proc)
+      end)
+      |> Repo.transaction()
+      |> case do
+        {:ok, result} ->
+          {:ok, result}
+        {:error, error} ->
+          Repo.rollback(error)
+      end
+    end
   end
 
   @doc """
     Insert all order detail
   """
   def create_order_detail(params) do
-    IO.inspect(params)
     Enum.map(params, fn item ->
       OrderDetailSchema.changeset(%OrderDetailSchema{}, item)
     end)
@@ -87,7 +111,7 @@ defmodule App.Repo.Order do
     with {:ok, %AppWeb.Utils.Paginator{} = data} <- AppWeb.Utils.Paginator.new(params) do
       # define schema
       total_entries = Repo.aggregate(@query, :count, :id)
-      offset = data.size * (data.page - 1)
+      _offset = data.size * (data.page - 1)
       # add offset and limit for query schema
       entries = Enum.reduce(params, @query, fn {key, val}, queryable ->
         key_atom = String.to_existing_atom(key)
@@ -97,8 +121,8 @@ defmodule App.Repo.Order do
             # split data
             [from, to] = String.split(val, ",")
             # convert string to time
-            {:ok, date_from, offset} = DateTime.from_iso8601(from)
-            {:ok, date_to, offset} = DateTime.from_iso8601(to)
+            {:ok, date_from, _offset} = DateTime.from_iso8601(from)
+            {:ok, date_to, _offset} = DateTime.from_iso8601(to)
             # return
             where(queryable, ^dynamic([m], fragment(
               "? BETWEEN ? AND ?",

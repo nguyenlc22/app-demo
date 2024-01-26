@@ -16,11 +16,12 @@ defmodule App.Schema.Order do
     timestamps()
   end
 
+  @default_fields [:code, :address, :total_price, :customer_id, :inserted_at, :updated_at]
   @doc false
   def changeset(order, attrs) do
     order
-    |> cast(attrs, [:code, :address, :total_price, :customer_id, :inserted_at, :updated_at])
-    |> validate_required([:code, :address, :total_price, :customer_id, :inserted_at, :updated_at])
+    |> cast(attrs, @default_fields)
+    |> validate_required(@default_fields)
     |> unique_constraint(:code)
   end
 end

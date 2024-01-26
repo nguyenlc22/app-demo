@@ -16,11 +16,12 @@ defmodule App.Schema.Product do
     timestamps()
   end
 
+  @default_fields [:code, :name, :selling_price, :brand_id]
   @doc false
   def changeset(product, attrs) do
     product
-    |> cast(attrs, [:code, :name, :selling_price, :brand_id])
-    |> validate_required([:code, :name, :selling_price, :brand_id])
+    |> cast(attrs, @default_fields)
+    |> validate_required(@default_fields)
     |> unique_constraint(:code)
   end
 end

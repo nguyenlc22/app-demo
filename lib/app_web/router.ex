@@ -14,6 +14,8 @@ defmodule AppWeb.Router do
     plug :accepts, ["json"]
   end
 
+
+
   # define scope for authentication
   scope "/auth", AppWeb do
     pipe_through :browser
@@ -37,7 +39,8 @@ defmodule AppWeb.Router do
 
   # define scope for customer api
   scope "/api/customer", AppWeb do
-    pipe_through :api
+    # pipe_through [:api, AppWeb.JWTAuthPlug]
+    pipe_through [:api]
 
     forward "/", Api.RouterCustomer
   end

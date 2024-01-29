@@ -6,7 +6,7 @@ defmodule App.Repo.Order do
 
   alias App.Repo
   alias App.Schema.Order, as: OrderSchema
-  # alias App.Schema.Customer, as: CustomerSchema
+  alias App.Schema.Customer, as: CustomerSchema
   alias App.Schema.OrderDetail, as: OrderDetailSchema
   # alias AppWeb.Utils.Functional, as: UtilsFunc
 
@@ -95,12 +95,20 @@ defmodule App.Repo.Order do
     Filter orders with params
   """
   def filter(params) do
+    query =  from(
+    i in OrderSchema,
+    join: c in CustomerSchema,
+    on: c.id == i.customer_id,
+    # where: c.id == i.brand_id,
+    order_by: [desc: i.id],
+    preload: [:customer, :order_detail]
+  )
     with {:ok, %AppWeb.Utils.Paginator{} = data} <- AppWeb.Utils.Paginator.new(params) do
       # define schema
-      total_entries = Repo.aggregate(@query, :count, :id)
+      total_entries = Repo.aggregate(query, :count, :id)
       _offset = data.size * (data.page - 1)
       # add offset and limit for query schema
-      entries = Enum.reduce(params, @query, fn {key, val}, queryable ->
+      entries = Enum.reduce(params, query, fn {key, val}, queryable ->
         key_atom = String.to_existing_atom(key)
         cond do
           key in @filter_association -> where(queryable, ^dynamic([m, c], field(c, ^key_atom) == ^val))

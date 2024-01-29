@@ -70,12 +70,7 @@ defmodule AppWeb.Api.OrderController do
   """
   def get_by_id(conn, params) do
     with %{"id" => id} <- params,
-         {:ok, res} <- OrderRepo.get_by_id(id) do
-      # IO.inspect(res)
-      # products_proc = Enum.reduce(res, [], fn ele, result ->
-      #   result ++ [Map.get(ele, "product")]
-      # end)
-      # {_, order_detail} = Map.pop(List.first(res), "product")
+         {:ok, res} <- {:ok, OrderRepo.get_by_id(id)} do
       json(conn, %{
         status: "Success",
         data: %{EC: 200, EM: "Get order by id success", DT: res}
